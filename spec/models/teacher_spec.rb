@@ -46,97 +46,90 @@ RSpec.describe Teacher, type: :model do
     # Create an Administrator first and ensure it's created successfully
     @admin = Administrator.create(id: 111222, name: "Admin Name")
     puts @admin.errors.full_messages unless @admin.persisted?  # Debugging
-
-    @teacher1 = Teacher.create(
-      email: "bob",
-      encrypted_password: "password123",
-      name: "Bob",
-      teacher_id: 123456,
-      administrator_id: @admin.id
-    )
   end
 
-  it "should expect a teacher account email to not be valid" do
-    expect(@teacher1.email).to_not be_valid
-  end
-end
+  context "when email is invalid" do
+    before do
+      @teacher1 = Teacher.new(
+        email: "bob",
+        encrypted_password: "password123",
+        name: "Bob",
+        teacher_id: 123456,
+        administrator_id: @admin.id
+      )
+    end
 
-RSpec.describe Teacher, type: :model do
-  before do
-    # Create an Administrator first and ensure it's created successfully
-    @admin = Administrator.create(id: 111222, name: "Admin Name")
-    puts @admin.errors.full_messages unless @admin.persisted?  # Debugging
-
-    @teacher1 = Teacher.create(
-      email: "bob@bob.com",
-      encrypted_password: "passwo",
-      name: "Bob",
-      teacher_id: 123456,
-      administrator_id: @admin.id
-    )
+    it "should not be valid" do
+      expect(@teacher1).to_not be_valid
+      expect(@teacher1.errors[:email]).to include("must be a valid email address")
+    end
   end
 
-  it "should expect a teacher account password to not be valid" do
-    expect(@teacher1.encrypted_password).to_not be_valid
+  context "when password is too short" do
+    before do
+      @teacher1 = Teacher.new(
+        email: "bob@bob.com",
+        encrypted_password: "passwo", # less than 8 characters
+        name: "Bob",
+        teacher_id: 123456,
+        administrator_id: @admin.id
+      )
+    end
+
+    it "should not be valid" do
+      expect(@teacher1).to_not be_valid
+      expect(@teacher1.errors[:encrypted_password]).to include("must be at least 8 characters long")
+    end
   end
 
-end
-RSpec.describe Teacher, type: :model do
-  before do
-    # Create an Administrator first and ensure it's created successfully
-    @admin = Administrator.create(id: 111222, name: "Admin Name")
-    puts @admin.errors.full_messages unless @admin.persisted?  # Debugging
+  context "when name is empty" do
+    before do
+      @teacher1 = Teacher.new(
+        email: "bob@bob.com",
+        encrypted_password: "password123",
+        name: "",
+        teacher_id: 123456,
+        administrator_id: @admin.id
+      )
+    end
 
-    @teacher1 = Teacher.create(
-      email: "bob@bob.com",
-      encrypted_password: "password123",
-      name: "",
-      teacher_id: 123456,
-      administrator_id: @admin.id
-    )
+    it "should not be valid" do
+      expect(@teacher1).to_not be_valid
+      expect(@teacher1.errors[:name]).to include("a name is required")
+    end
   end
 
-  it "should expect a teacher account name to not be valid" do
-    expect(@teacher1.name).to_not be_valid
-  end
-end
+  context "when teacher_id is invalid" do
+    before do
+      @teacher1 = Teacher.new(
+        email: "bob@bob.com",
+        encrypted_password: "password123",
+        name: "Bob",
+        teacher_id: 12345, # invalid as it should be >= 100000
+        administrator_id: @admin.id
+      )
+    end
 
-RSpec.describe Teacher, type: :model do
-  before do
-    # Create an Administrator first and ensure it's created successfully
-    @admin = Administrator.create(id: 111222, name: "Admin Name")
-    puts @admin.errors.full_messages unless @admin.persisted?  # Debugging
-
-    @teacher1 = Teacher.create(
-      email: "bob@bob.com",
-      encrypted_password: "password123",
-      name: "Bob",
-      teacher_id: 12345,
-      administrator_id: @admin.id
-    )
+    it "should not be valid" do
+      expect(@teacher1).to_not be_valid
+      expect(@teacher1.errors[:teacher_id]).to include("must be an id within 100000-999999")
+    end
   end
 
-  it "should expect a teacher account teacher id to not be valid" do
-    expect(@teacher1.teacher_id).to_not be_valid
-  end
-end
+  context "when administrator_id is invalid" do
+    before do
+      @teacher1 = Teacher.new(
+        email: "bob@bob.com",
+        encrypted_password: "password123",
+        name: "Bob",
+        teacher_id: 123456,
+        administrator_id: nil # no admin associated
+      )
+    end
 
-RSpec.describe Teacher, type: :model do
-  before do
-    # Create an Administrator first and ensure it's created successfully
-    @admin = Administrator.create(id: 11122, name: "Admin Name")
-    puts @admin.errors.full_messages unless @admin.persisted?  # Debugging
-
-    @teacher1 = Teacher.create(
-      email: "bob@bob.com",
-      encrypted_password: "password123",
-      name: "Bob",
-      teacher_id: 12345,
-      administrator_id: @admin.id
-    )
-  end
-
-  it "should expect a teacher account admin id to not be valid" do
-    expect(@teacher1.administrator_id).to_not be_valid
+    it "should not be valid" do
+      expect(@teacher1).to_not be_valid
+      expect(@teacher1.errors[:administrator]).to include("must exist")
+    end
   end
 end
