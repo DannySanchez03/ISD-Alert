@@ -6,8 +6,9 @@
   "author": "DannySanchez03 <149462090+DannySanchez03@users.noreply.github.com>",
   "license": "MIT",
   "scripts": {
-    "build:css": "tailwindcss build app/assets/stylesheets/application.css -o app/assets/builds/application.css"
+    "build:css": "tailwindcss -i app/assets/stylesheets/application.css -o app/assets/builds/application.css"
   },
+
   "dependencies": {
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
