@@ -32,6 +32,8 @@ group :development do
   gem "erb_lint"
   gem "brakeman", require: false
   gem "hotwire-livereload", "~> 1.2"
+  gem "rubocop", require: false
+  gem "rubocop-rails-omakase"
 end
 
 group :production do
