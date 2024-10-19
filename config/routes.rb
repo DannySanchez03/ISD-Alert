@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   resources :students
   resources :teachers
-  resources :student_attencances
+  resources :student_attendancesdances
   resources :teacher_overviews
   resources :administrators
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
