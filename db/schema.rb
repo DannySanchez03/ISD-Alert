@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_19_195336) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_19_235926) do
   create_table "administrators", force: :cascade do |t|
     t.string "name"
     t.string "school_name"
@@ -20,18 +20,20 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_19_195336) do
   end
 
   create_table "students", force: :cascade do |t|
-    t.string "name"
-    t.integer "student_id"
-    t.integer "class_period"
+    t.string "name", null: false
+    t.integer "student_id", null: false
+    t.integer "class_period", null: false
     t.integer "teacher_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "encrypted_password", null: false
+    t.string "email", null: false
     t.index ["teacher_id"], name: "index_students_on_teacher_id"
   end
 
   create_table "teachers", force: :cascade do |t|
-    t.string "name"
-    t.integer "teacher_id"
+    t.string "name", null: false
+    t.integer "teacher_id", null: false
     t.integer "administrator_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
