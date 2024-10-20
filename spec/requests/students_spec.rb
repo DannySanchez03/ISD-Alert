@@ -17,13 +17,10 @@ RSpec.describe "/students", type: :request do
   # This should return the minimal set of attributes required to create a valid
   # Student. As you add validations to Student, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
-  }
-
-  let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
-  }
+  let(:admin) { Administrator.create!(name: "Admin Name", id: 122334) }
+  let(:teacher) {Teacher.create!(email: "bob@bob.com", encrypted_password: "password123", name: "Bob", teacher_id: 123456, administrator_id: admin.id) }
+  let(:valid_attributes) { { email: "dakiti@yahoo.com", encrypted_password: "passwors", name: "dakiti", student_id: 654321, class_period:1, teacher_id: teacher.id } }
+  let(:invalid_attributes) { { email: "", encrypted_password: "", name: "", student_id: nil, teacher_id: nil } }
 
   describe "GET /index" do
     it "renders a successful response" do
@@ -86,15 +83,13 @@ RSpec.describe "/students", type: :request do
 
   describe "PATCH /update" do
     context "with valid parameters" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
+      let(:new_attributes) {valid_attributes}
 
       it "updates the requested student" do
         student = Student.create! valid_attributes
         patch student_url(student), params: { student: new_attributes }
         student.reload
-        skip("Add assertions for updated state")
+        expect(student.name).to eq("dakiti")
       end
 
       it "redirects to the student" do
