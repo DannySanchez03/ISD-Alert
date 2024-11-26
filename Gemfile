@@ -22,7 +22,7 @@ gem "sassc-rails"
 
 group :development, :test do
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
-  gem "sqlite3", "~> 1.4"
+  gem "sqlite3", "~> 2.3"
   gem "rspec-rails"
 end
 
